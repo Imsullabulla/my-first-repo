@@ -1,6 +1,7 @@
 /* 1. Setup - Using a nice font and smooth colors */
 body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, 
+#2c5364 100%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: white;
     height: 100vh;
@@ -36,7 +37,7 @@ p {
 .box {
     width: 60px;
     height: 60px;
-    background: #00d2ff;
+    background: #ffd700;
     margin: 30px auto;
     border-radius: 12px;
     animation: spin 4s linear infinite;
@@ -45,4 +46,9 @@ p {
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+}
+.box:hover {
+    background: #ff00ff; /* Changes to Hot Pink when you hover! */
+    transform: scale(1.2); /* Makes it grow slightly bigger */
+    cursor: pointer;
 }
