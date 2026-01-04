@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Expense, ExpenseFormData } from '@/lib/types';
 import { parseISO } from 'date-fns';
+import { AnimatePresence } from 'framer-motion';
 import { useExpenses } from '@/hooks/useExpenses';
 import { useFilters } from '@/hooks/useFilters';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { SplashScreen } from '@/components/SplashScreen';
 import { ExpenseForm } from '@/components/expenses/ExpenseForm';
 import { ExpenseList } from '@/components/expenses/ExpenseList';
 import { ExpenseFilters } from '@/components/expenses/ExpenseFilters';
@@ -28,6 +30,15 @@ export default function Home() {
 
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleAddExpense = (data: ExpenseFormData) => {
     addExpense(data);
@@ -52,61 +63,67 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg flex flex-col">
-      <Header expenses={expenses} />
+    <>
+      <AnimatePresence>
+        {showSplash && <SplashScreen />}
+      </AnimatePresence>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
-        <div className="space-y-8">
-          {/* Stats Cards */}
-          <ExpenseStatsCards stats={stats} />
+      <div className="min-h-screen bg-slate-50 dark:bg-dark-bg flex flex-col">
+        <Header expenses={expenses} />
 
-          {/* Add Expense Form */}
-          <ExpenseForm onSubmit={handleAddExpense} />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+          <div className="space-y-8">
+            {/* Stats Cards */}
+            <ExpenseStatsCards stats={stats} />
 
-          {/* Filters */}
-          <ExpenseFilters
-            filters={filters}
-            onSearchChange={setSearchQuery}
-            onCategoryChange={setCategory}
-            onDateRangeChange={setDateRange}
-            onSortChange={setSorting}
-            onReset={resetFilters}
-          />
+            {/* Add Expense Form */}
+            <ExpenseForm onSubmit={handleAddExpense} />
 
-          {/* Expense List */}
-          <ExpenseList
-            expenses={filteredExpenses}
-            onEdit={handleEditExpense}
-            onDelete={deleteExpense}
-          />
+            {/* Filters */}
+            <ExpenseFilters
+              filters={filters}
+              onSearchChange={setSearchQuery}
+              onCategoryChange={setCategory}
+              onDateRangeChange={setDateRange}
+              onSortChange={setSorting}
+              onReset={resetFilters}
+            />
 
-          {/* Charts */}
-          {expenses.length > 0 && <DashboardCharts expenses={expenses} />}
-        </div>
-      </main>
+            {/* Expense List */}
+            <ExpenseList
+              expenses={filteredExpenses}
+              onEdit={handleEditExpense}
+              onDelete={deleteExpense}
+            />
 
-      <Footer />
+            {/* Charts */}
+            {expenses.length > 0 && <DashboardCharts expenses={expenses} />}
+          </div>
+        </main>
 
-      {/* Edit Modal */}
-      <Modal
-        isOpen={isEditModalOpen}
-        onClose={handleCancelEdit}
-        title="Edit Expense"
-      >
-        {editingExpense && (
-          <ExpenseForm
-            onSubmit={handleUpdateExpense}
-            initialData={{
-              date: parseISO(editingExpense.date),
-              amount: editingExpense.amount.toString(),
-              category: editingExpense.category,
-              description: editingExpense.description,
-            }}
-            onCancel={handleCancelEdit}
-            isEdit
-          />
-        )}
-      </Modal>
-    </div>
+        <Footer />
+
+        {/* Edit Modal */}
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={handleCancelEdit}
+          title="Edit Expense"
+        >
+          {editingExpense && (
+            <ExpenseForm
+              onSubmit={handleUpdateExpense}
+              initialData={{
+                date: parseISO(editingExpense.date),
+                amount: editingExpense.amount.toString(),
+                category: editingExpense.category,
+                description: editingExpense.description,
+              }}
+              onCancel={handleCancelEdit}
+              isEdit
+            />
+          )}
+        </Modal>
+      </div>
+    </>
   );
 }
