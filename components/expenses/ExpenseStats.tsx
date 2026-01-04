@@ -4,12 +4,16 @@ import { ExpenseStats } from '@/lib/types';
 import { formatCurrency } from '@/lib/formatting';
 import { Card } from '@/components/ui/Card';
 import { DollarSign, Hash, TrendingUp, Calendar } from 'lucide-react';
+import { useMonthlyGoal } from '@/hooks/useMonthlyGoal';
+import { MonthlyGoalCard } from './MonthlyGoalCard';
 
 interface ExpenseStatsProps {
   stats: ExpenseStats;
 }
 
 export function ExpenseStatsCards({ stats }: ExpenseStatsProps) {
+  const { goal, setGoal } = useMonthlyGoal();
+
   const statCards = [
     {
       title: 'Total Spent',
@@ -42,7 +46,7 @@ export function ExpenseStatsCards({ stats }: ExpenseStatsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
       {statCards.map((stat, index) => {
         const Icon = stat.icon;
         return (
@@ -63,6 +67,7 @@ export function ExpenseStatsCards({ stats }: ExpenseStatsProps) {
           </Card>
         );
       })}
+      <MonthlyGoalCard goal={goal} onGoalChange={setGoal} />
     </div>
   );
 }
