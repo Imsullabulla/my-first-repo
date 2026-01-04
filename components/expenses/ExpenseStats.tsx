@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { ExpenseStats } from '@/lib/types';
 import { formatCurrency } from '@/lib/formatting';
 import { Card } from '@/components/ui/Card';
@@ -13,6 +14,11 @@ interface ExpenseStatsProps {
 
 export function ExpenseStatsCards({ stats }: ExpenseStatsProps) {
   const { goal, setGoal } = useMonthlyGoal();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const statCards = [
     {
@@ -46,7 +52,7 @@ export function ExpenseStatsCards({ stats }: ExpenseStatsProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className={`grid grid-cols-1 sm:grid-cols-2 ${mounted ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
       {statCards.map((stat, index) => {
         const Icon = stat.icon;
         return (
@@ -67,7 +73,7 @@ export function ExpenseStatsCards({ stats }: ExpenseStatsProps) {
           </Card>
         );
       })}
-      <MonthlyGoalCard goal={goal} onGoalChange={setGoal} />
+      {mounted && <MonthlyGoalCard goal={goal} onGoalChange={setGoal} />}
     </div>
   );
 }
