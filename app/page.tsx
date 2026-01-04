@@ -6,6 +6,7 @@ import { parseISO } from 'date-fns';
 import { useExpenses } from '@/hooks/useExpenses';
 import { useFilters } from '@/hooks/useFilters';
 import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 import { ExpenseForm } from '@/components/expenses/ExpenseForm';
 import { ExpenseList } from '@/components/expenses/ExpenseList';
 import { ExpenseFilters } from '@/components/expenses/ExpenseFilters';
@@ -51,10 +52,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg">
+    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg flex flex-col">
       <Header expenses={expenses} />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
         <div className="space-y-8">
           {/* Stats Cards */}
           <ExpenseStatsCards stats={stats} />
@@ -83,6 +84,8 @@ export default function Home() {
           {expenses.length > 0 && <DashboardCharts expenses={expenses} />}
         </div>
       </main>
+
+      <Footer />
 
       {/* Edit Modal */}
       <Modal
