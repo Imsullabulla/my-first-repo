@@ -1,0 +1,1 @@
+cd /home/claude && mkdir git-branch-demo && cd git-branch-demo && git init
